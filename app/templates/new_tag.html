@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Sign In</h1>
+<form action="" method="post" name="new_tag">
+    {{form.hidden_tag()}}
+    <p>
+        Please enter tag name:
+        {{form.name(size=50)}}
+        {% for error in form.errors.name %}<br>
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}
+    <p><input type="submit" value="Create Tag"></p>
+</form>
+{% endblock %}

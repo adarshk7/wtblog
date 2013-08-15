@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Sign In</h1>
+<form action="" method="post" name="new_tag">
+    {{form.hidden_tag()}}
+    <p>
+        Please enter title:
+        {{form.title(size=100)}}<br>
+        Please enter content:
+        {{form.body(size=500)}}<br>
+        Please enter title:
+        {{form.tags}}<br>
+    <p><input type="submit" value="Create Tag"></p>
+</form>
+{% endblock %}
