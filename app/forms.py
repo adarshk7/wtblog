@@ -5,6 +5,9 @@ from app import models, db
 class TagForm(Form):
 	name = TextField('name', validators=[Required()])
 
+class SearchForm(Form):
+	query = TextField('query', validators=[Required()])
+
 class PostForm(Form):
 	title = TextField('title', validators=[Required()])
 	body = TextField('body', validators=[Required()])

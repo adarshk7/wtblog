@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect
 from app import app, models, db
-from forms import TagForm, PostForm
+from forms import TagForm, PostForm, SearchForm
+from sqlalchemy_searchable import search
 
 @app.route('/')
 @app.route('/index')
@@ -12,6 +13,17 @@ def index():
 def blog(id):
 	post = db.session.query(models.Post).filter_by(id=id).one()
 	return render_template('blog.html', title=post.title, post=post)
+
+@app.route('/search', methods=['GET', 'POST'])
+def search_post():
+	form = SearchForm()
+	if form.validate_on_submit():
+		results = search(db.session.query(models.Post), form.query.data).limit(5).all()
+		if results:
+			return render_template('search.html', title="Search Results - ", form=form, results=results)
+		flash('No results found! Try again')
+		return redirect('/search')
+	return render_template('search.html', title="Search", form=form)
 
 @app.route('/admin')
 def admin():
