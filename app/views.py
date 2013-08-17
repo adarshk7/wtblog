@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect
 from app import app, models, db, login_manager
-from forms import TagForm, PostForm, SearchForm, LoginForm
+#from forms import TagForm, PostForm, SearchForm, LoginForm
 from flask.ext.login import login_user, logout_user, login_required
 from sqlalchemy_searchable import search
 from admin import User
