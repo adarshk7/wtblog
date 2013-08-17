@@ -1,7 +1,9 @@
 from flask import render_template, flash, redirect
-from app import app, models, db
-from forms import TagForm, PostForm, SearchForm
+from app import app, models, db, login_manager
+from forms import TagForm, PostForm, SearchForm, LoginForm
+from flask.ext.login import login_user, logout_user, login_required
 from sqlalchemy_searchable import search
+from admin import User
 
 @app.route('/')
 @app.route('/index')
@@ -25,13 +27,38 @@ def search_post():
 		return redirect('/search')
 	return render_template('search.html', title="Search", form=form)
 
+@login_manager.user_loader
+def load_user(userid):
+	return User()
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	form = LoginForm()
+	if form.validate_on_submit():
+		if form.password.data == User.password:
+			flash('Login Successful!')
+			login_user(User())
+			return redirect('/admin')
+		else:
+			flash('Bad password!')
+			return redirect('/index')
+	return render_template('login.html', title="Login - ", form=form)
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/index')
+
 @app.route('/admin')
+@login_required
 def admin():
 	tags = db.session.query(models.Tag).all()
 	posts = db.session.query(models.Post).all()
 	return render_template('admin.html', posts=posts, tags=tags)
 
 @app.route('/admin/new_tag', methods=['GET', 'POST'])
+@login_required
 def new_tag():
 	form = TagForm()
 	if form.validate_on_submit():
@@ -43,6 +70,7 @@ def new_tag():
 	return render_template('new_tag.html', title="New Tag - Admin", form=form)
 
 @app.route('/admin/delete_tag/<name>')
+@login_required
 def delete_tag(name):
 	tag = db.session.query(models.Tag).filter_by(name=name).one()
 	db.session.delete(tag)
@@ -51,6 +79,7 @@ def delete_tag(name):
 	return redirect('/admin')
 
 @app.route('/admin/edit_tag/<name>', methods=['GET', 'POST'])
+@login_required
 def edit_tag(name):
 	form = TagForm()
 	if form.validate_on_submit():
@@ -62,6 +91,7 @@ def edit_tag(name):
 	return render_template('new_tag.html', title="Edit Tag - Admin", form=form)
 
 @app.route('/admin/new_post', methods=['GET', 'POST'])
+@login_required
 def new_post():
 	form = PostForm()
 	if form.validate_on_submit():
@@ -75,6 +105,7 @@ def new_post():
 	return render_template('new_post.html', title="New Post - Admin", form=form)
 
 @app.route('/admin/edit_post/<id>', methods=['GET', 'POST'])
+@login_required
 def edit_post(id):
 	form = PostForm()
 	if form.validate_on_submit():
@@ -90,6 +121,7 @@ def edit_post(id):
 	return render_template('new_post.html', title="Edit Post - Admin", form=form)
 
 @app.route('/admin/delete_post/<id>')
+@login_required
 def delete_post(id):
 	post = db.session.query(models.Post).filter_by(id=id).one()
 	db.session.delete(post)
@@ -98,6 +130,7 @@ def delete_post(id):
 	return redirect('/admin')
 
 @app.route('/admin/remove_tag/<id>/<name>')
+@login_required
 def remove_tag(id, name):
 	post = db.session.query(models.Post).filter_by(id=id).one()
 	tag = db.session.query(models.Tag).filter_by(name=name).one()

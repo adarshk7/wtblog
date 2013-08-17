@@ -1,6 +1,9 @@
-from flask.ext.wtf import Form, TextField, SelectMultipleField
+from flask.ext.wtf import Form, TextField, SelectMultipleField, PasswordField
 from flask.ext.wtf import Required
 from app import models, db
+
+class LoginForm(Form):
+	password = PasswordField('password', validators=[Required()])
 
 class TagForm(Form):
 	name = TextField('name', validators=[Required()])
