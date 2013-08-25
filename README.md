@@ -1,17 +1,27 @@
 wtblog
 ======
-Visitor:
 
-List Blog Posts, single post [done]
-Search post(full text) [done]
-Admin:
 
-Login [todo]
-Add, delete and edit [done]
-Can add and remove multiple tags from post [done]
-Can add new tags, edit tags and delete tags with effect on relevant posts [done]
-Pagination [todo]
-UI: Bootstrap [todo]
+IMPLEMENTED
+-----------
+
+Visitor [done]
+
+Search post full text [done]
+
+Admin Login [done]
+
+Posts CRUD [done]
+
+Tags CRUD with reflection in posts [done]
+
+UI Bootstrap [done]
+
+
+TOOLS USED
+----------
+
+UI: Twitter Bootstrap
 
 Template: Jinja2
 
@@ -21,4 +31,10 @@ Framework: Flask
 
 ORM: Flask-SQLAlchemy
 
-Heroku: [TODO]
+
+REMAINING
+---------
+
+Admin Pagination [todo]
+
+Heroku deployment [todo: DNS error problems]
