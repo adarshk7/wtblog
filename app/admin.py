@@ -1,6 +1,6 @@
 class User():
 	id = 7834
-	password = "14MzaosumaDmIn"
+	password = "easy"
 
 	def is_authenticated(self):
 		return True

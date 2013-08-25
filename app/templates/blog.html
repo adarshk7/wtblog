@@ -2,9 +2,9 @@
 {% block content %}
 	<h1>{{ post.title }}</h1>
 	<p>{{ post.body }}</p>
-	<div>TAGS: | 
+	<div>
 		{% for tag in post.tags %}
-			{{ tag.name }} |
+			<span class="label label-inverse">{{ tag.name }}</span>
 		{% endfor %}
 	</div>
 {% endblock %}

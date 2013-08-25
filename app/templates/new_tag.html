@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Create Tag</h1>
+<h1>Create/Edit Tag</h1>
 <form action="" method="post" name="new_tag">
     {{form.hidden_tag()}}
     <p>
@@ -10,6 +10,6 @@
         {% for error in form.errors.name %}<br>
         <span style="color: red;">[{{error}}]</span>
         {% endfor %}
-    <p><input type="submit" value="Create Tag"></p>
+    <p><input type="submit" value="Create/Edit Tag"></p>
 </form>
 {% endblock %}

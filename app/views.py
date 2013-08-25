@@ -7,6 +7,7 @@ from admin import User
 
 @app.route('/')
 @app.route('/index')
+@app.route('/blog')
 def index():
 	posts = db.session.query(models.Post).order_by(models.Post.id.desc()).offset(0).limit(5).all()
 	return render_template('index.html', title="Home", posts=posts)
@@ -48,6 +49,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash('Logout Successful!')
     return redirect('/index')
 
 @app.route('/admin')
@@ -55,7 +57,7 @@ def logout():
 def admin():
 	tags = db.session.query(models.Tag).all()
 	posts = db.session.query(models.Post).all()
-	return render_template('admin.html', posts=posts, tags=tags)
+	return render_template('admin.html', posts=posts, tags=tags, admin=True)
 
 @app.route('/admin/new_tag', methods=['GET', 'POST'])
 @login_required
@@ -67,7 +69,7 @@ def new_tag():
 		db.session.add(new_tag)
 		db.session.commit()
 		return redirect('/admin/new_tag')
-	return render_template('new_tag.html', title="New Tag - Admin", form=form)
+	return render_template('new_tag.html', title="New Tag - Admin", form=form, admin=True)
 
 @app.route('/admin/delete_tag/<name>')
 @login_required
@@ -88,7 +90,8 @@ def edit_tag(name):
 		db.session.commit()
 		flash('Tag with name %r changed to %r successfully!' % (name, form.name.data))
 		return redirect('/admin')
-	return render_template('new_tag.html', title="Edit Tag - Admin", form=form)
+	form.name.data = name
+	return render_template('new_tag.html', title="Edit Tag - Admin", form=form, admin=True)
 
 @app.route('/admin/new_post', methods=['GET', 'POST'])
 @login_required
@@ -102,7 +105,7 @@ def new_post():
 		db.session.commit()
 		flash('Post with title %r created successfully!' % (new_post.title))
 		return redirect('/index')
-	return render_template('new_post.html', title="New Post - Admin", form=form)
+	return render_template('new_post.html', title="New Post - Admin", form=form, admin=True)
 
 @app.route('/admin/edit_post/<id>', methods=['GET', 'POST'])
 @login_required
@@ -118,6 +121,9 @@ def edit_post(id):
 		db.session.commit()
 		flash('Post with title %r edited successfully!' % (post.title))
 		return redirect('/admin')
+	post = db.session.query(models.Post).filter_by(id=id).one()
+	form.title.data = post.title
+	form.body.data = post.body
 	return render_template('new_post.html', title="Edit Post - Admin", form=form)
 
 @app.route('/admin/delete_post/<id>')

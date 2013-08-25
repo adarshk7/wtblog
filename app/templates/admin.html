@@ -1,14 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-{% for post in posts %}
-	<p>{{ post.title }} (<a href="/admin/delete_post/{{ post.id }}">delete</a> | <a href="/admin/edit_post/{{ post.id }}">edit</a>) | 
-		{% for tag in post.tags %}
-		{{tag.name}} (<a href="/admin/remove_tag/{{ post.id }}/{{ tag.name }}">X</a>) | 
+<div class="row">
+	<div class="span10">
+		<h1>Posts</h1>
+		<hr>
+		{% for post in posts %}
+			<p>{{ post.title }} (<a href="/admin/delete_post/{{ post.id }}">delete</a> | <a href="/admin/edit_post/{{ post.id }}">edit</a>) | 
+				{% for tag in post.tags %}
+				{{tag.name}} (<a href="/admin/remove_tag/{{ post.id }}/{{ tag.name }}">X</a>) | 
+				{% endfor %}
+			</p>
 		{% endfor %}
-	</p>
-{% endfor %}
-<hr>
-{% for tag in tags %}
-	<p>{{ tag.name }} (<a href="/admin/delete_tag/{{ tag.name }}">delete</a> | <a href="/admin/edit_tag/{{ tag.name }}">edit</a>)</p>
-{% endfor %}
-{% endblock %}
+	</div>
+
+	<div class="span2">
+		<h1>Tags</h1>
+		<hr>
+		{% for tag in tags %}
+			<p>{{ tag.name }} (<a href="/admin/delete_tag/{{ tag.name }}">delete</a> | <a href="/admin/edit_tag/{{ tag.name }}">edit</a>)</p>
+		{% endfor %}
+		{% endblock %}
+	</div>
+</div>
