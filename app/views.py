@@ -13,7 +13,7 @@ from math import ceil
 @app.route('/index/<int:page>')
 def index(page = 1):
 	posts = models.Post.query.paginate(page, RESULTS_PER_PAGE, False)
-	num = int(ceil(posts.total / RESULTS_PER_PAGE))
+	num = int(ceil(float(posts.total) / RESULTS_PER_PAGE)) + 1
 	return render_template('index.html', title="Home", posts=posts.items, number_of_pages=num, user=current_user)
 
 @app.route('/blog/<id>')
