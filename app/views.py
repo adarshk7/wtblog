@@ -102,13 +102,14 @@ def edit_tag(name):
 def new_post():
 	form = PostForm()
 	if form.validate_on_submit():
+		tags = [db.session.query(models.Tag).filter_by(id=int(id)).one()
+				for id in form.tags.data]
 		new_post = models.Post(title=form.title.data, body=form.body.data, tags=tags)
 		db.session.add(new_post)
 		db.session.commit()
 		flash('Post with title %r created successfully!' % (new_post.title))
 		return redirect('/index')
-	form.tags.data = [db.session.query(models.Tag).filter_by(id=int(id)).one()
-				for id in form.tags.data]
+	form.tags.data = db.session.query(models.Tag).all()
 	return render_template('new_post.html', title="New Post - Admin", form=form, user=current_user)
 
 @app.route('/admin/edit_post/<id>', methods=['GET', 'POST'])
