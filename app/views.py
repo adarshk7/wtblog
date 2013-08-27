@@ -4,13 +4,17 @@ from forms import TagForm, PostForm, SearchForm, LoginForm
 from flask.ext.login import login_user, logout_user, login_required
 from sqlalchemy_searchable import search
 from admin import User
+from config import RESULTS_PER_PAGE
+from math import ceil
 
 @app.route('/')
 @app.route('/index')
 @app.route('/blog')
-def index():
-	posts = db.session.query(models.Post).order_by(models.Post.id.desc()).offset(0).limit(5).all()
-	return render_template('index.html', title="Home", posts=posts)
+@app.route('/index/<int:page>')
+def index(page = 1):
+	posts = models.Post.query.paginate(page, RESULTS_PER_PAGE, False)
+	num = int(ceil(posts.total / RESULTS_PER_PAGE))
+	return render_template('index.html', title="Home", posts=posts.items, number_of_pages=num)
 
 @app.route('/blog/<id>')
 def blog(id):

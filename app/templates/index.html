@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-{% for post in posts %}
 	<div class="row">
 		<div class="span12">
+			{% for post in posts %}
 			<h1><a href="/blog/{{ post.id }}">{{ post.title }}</a></h1>
 			<p>{{ post.body }}</p>
 			<div>
@@ -10,8 +10,16 @@
 				<span class="label label-inverse">{{ tag.name }}</span> 
 				{% endfor %}
 			</div>
+			<hr>
+			{% endfor %}
+			<div class="pagination">
+				<ul>
+				{% for page_number in range(1, number_of_pages + 1) %}
+					<li><a href="/index/{{ page_number }}">{{ page_number }}</a></li>
+				{% endfor %}
+				</ul>
+			</div>
 		</div>
 	</div>
-	<hr>
-{% endfor %}
+
 {% endblock %}
