@@ -25,7 +25,7 @@ def blog(id):
 def search_post():
 	form = SearchForm()
 	if form.validate_on_submit():
-		results = search(db.session.query(models.Post), form.query.data).limit(5).all()
+		results = search(db.session.query(models.Post), form.query.data).limit(RESULTS_PER_PAGE).all()
 		if results:
 			return render_template('search.html', title="Search Results - ", form=form, results=results, user=current_user)
 		flash('No results found! Try again')
