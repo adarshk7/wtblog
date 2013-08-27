@@ -22,13 +22,13 @@
                         <ul class="nav">    
                             <li><a href="/index">Home</a></li>
                             <li><a href="/search">Search</a></li>
-                            {% if admin %}
+                            {% if user.is_authenticated() %}
                             <li><a href="/admin">Admin</a></li>
                             <li><a href="/admin/new_post">New Post</a></li>
                             {%  endif %}
                         </ul>
                         <ul class="nav pull-right">
-                            {% if admin %}
+                            {% if user.is_authenticated() %}
                             <li class="pull-right"><a href="/logout">Logout</a></li>
                             {% else %}
                             <li class="pull-right"><a href="/login">Admin Login</a></li>

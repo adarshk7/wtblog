@@ -17,6 +17,8 @@ Tags CRUD with reflection in posts [done]
 
 UI Bootstrap [done]
 
+Pagination [done]
+
 
 TOOLS USED
 ----------
@@ -34,7 +36,5 @@ ORM: Flask-SQLAlchemy
 
 REMAINING
 ---------
-
-Admin Pagination [todo]
 
 Heroku deployment [todo: DNS error problems]

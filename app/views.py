@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect
 from app import app, models, db, login_manager
 from forms import TagForm, PostForm, SearchForm, LoginForm
-from flask.ext.login import login_user, logout_user, login_required
+from flask.ext.login import login_user, logout_user, login_required, current_user
 from sqlalchemy_searchable import search
 from admin import User
 from config import RESULTS_PER_PAGE
@@ -14,12 +14,12 @@ from math import ceil
 def index(page = 1):
 	posts = models.Post.query.paginate(page, RESULTS_PER_PAGE, False)
 	num = int(ceil(posts.total / RESULTS_PER_PAGE))
-	return render_template('index.html', title="Home", posts=posts.items, number_of_pages=num)
+	return render_template('index.html', title="Home", posts=posts.items, number_of_pages=num, user=current_user)
 
 @app.route('/blog/<id>')
 def blog(id):
 	post = db.session.query(models.Post).filter_by(id=id).one()
-	return render_template('blog.html', title=post.title, post=post)
+	return render_template('blog.html', title=post.title, post=post, user=current_user)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search_post():
@@ -27,10 +27,10 @@ def search_post():
 	if form.validate_on_submit():
 		results = search(db.session.query(models.Post), form.query.data).limit(5).all()
 		if results:
-			return render_template('search.html', title="Search Results - ", form=form, results=results)
+			return render_template('search.html', title="Search Results - ", form=form, results=results, user=current_user)
 		flash('No results found! Try again')
 		return redirect('/search')
-	return render_template('search.html', title="Search", form=form)
+	return render_template('search.html', title="Search", form=form, user=current_user)
 
 @login_manager.user_loader
 def load_user(userid):
@@ -47,7 +47,7 @@ def login():
 		else:
 			flash('Bad password!')
 			return redirect('/index')
-	return render_template('login.html', title="Login - ", form=form)
+	return render_template('login.html', title="Login - ", form=form, user=current_user)
 
 @app.route("/logout")
 @login_required
@@ -61,7 +61,7 @@ def logout():
 def admin():
 	tags = db.session.query(models.Tag).all()
 	posts = db.session.query(models.Post).all()
-	return render_template('admin.html', posts=posts, tags=tags, admin=True)
+	return render_template('admin.html', posts=posts, tags=tags, user=current_user)
 
 @app.route('/admin/new_tag', methods=['GET', 'POST'])
 @login_required
@@ -73,7 +73,7 @@ def new_tag():
 		db.session.add(new_tag)
 		db.session.commit()
 		return redirect('/admin/new_tag')
-	return render_template('new_tag.html', title="New Tag - Admin", form=form, admin=True)
+	return render_template('new_tag.html', title="New Tag - Admin", form=form, user=current_user)
 
 @app.route('/admin/delete_tag/<name>')
 @login_required
@@ -95,7 +95,7 @@ def edit_tag(name):
 		flash('Tag with name %r changed to %r successfully!' % (name, form.name.data))
 		return redirect('/admin')
 	form.name.data = name
-	return render_template('new_tag.html', title="Edit Tag - Admin", form=form, admin=True)
+	return render_template('new_tag.html', title="Edit Tag - Admin", form=form, user=current_user)
 
 @app.route('/admin/new_post', methods=['GET', 'POST'])
 @login_required
@@ -109,7 +109,7 @@ def new_post():
 		db.session.commit()
 		flash('Post with title %r created successfully!' % (new_post.title))
 		return redirect('/index')
-	return render_template('new_post.html', title="New Post - Admin", form=form, admin=True)
+	return render_template('new_post.html', title="New Post - Admin", form=form, user=current_user)
 
 @app.route('/admin/edit_post/<id>', methods=['GET', 'POST'])
 @login_required
@@ -128,7 +128,7 @@ def edit_post(id):
 	post = db.session.query(models.Post).filter_by(id=id).one()
 	form.title.data = post.title
 	form.body.data = post.body
-	return render_template('new_post.html', title="Edit Post - Admin", form=form)
+	return render_template('new_post.html', title="Edit Post - Admin", form=form, user=current_user)
 
 @app.route('/admin/delete_post/<id>')
 @login_required
