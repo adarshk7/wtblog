@@ -34,7 +34,7 @@ Framework: Flask
 ORM: Flask-SQLAlchemy
 
 
-REMAINING
----------
+DEPLOYMENT
+----------
 
-Heroku deployment [todo: DNS error problems]
+Live at: http://wtblog-adarsh.herokuapp.com/
